@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from functools import wraps
-import subprocess
+import os
 
 app = Flask(__name__)
 app.secret_key = "your-secret-key-change-this-in-production"
@@ -35,6 +35,19 @@ def login_required(f):
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return wrap
+
+
+# ------------------------------
+# DATASET FILE LIST (OPTION 2)
+# ------------------------------
+def get_dataset_files():
+    base_dir = os.getcwd()
+    dataset_dir = os.path.join(base_dir, "dataset")
+
+    if os.path.exists(dataset_dir):
+        return sorted(os.listdir(dataset_dir))
+    else:
+        return ["Dataset folder not found"]
 
 
 # ------------------------------
@@ -92,8 +105,10 @@ def register():
         try:
             conn = sqlite3.connect('users.db')
             c = conn.cursor()
-            c.execute("INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
-                      (username, email, hashed))
+            c.execute(
+                "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+                (username, email, hashed)
+            )
             conn.commit()
             conn.close()
             flash("Registration successful!", "success")
@@ -106,44 +121,18 @@ def register():
 
 
 # ------------------------------
-# DASHBOARD (SHOW POD INFO)
+# DASHBOARD (DATASET ONLY)
 # ------------------------------
 @app.route('/dashboard')
 @login_required
 def dashboard():
 
-    pod_status = subprocess.getoutput("kubectl get pods")
-    pod_files = subprocess.getoutput("kubectl exec pcos-pod -- ls -R /app/dataset")
+    dataset_files = get_dataset_files()
 
     return render_template(
         "dashboard.html",
         username=session.get("username"),
-        pod_status=pod_status,
-        pod_files=pod_files,
-        pod_output=""  # nothing yet
-    )
-
-
-# ------------------------------
-# TRAIN MODEL MANUALLY
-# ------------------------------
-@app.route('/train', methods=['POST'])
-@login_required
-def train():
-
-    output = subprocess.getoutput(
-        "kubectl exec pcos-pod -- python /app/dataset/train_bigan_classifier.py"
-    )
-
-    pod_status = subprocess.getoutput("kubectl get pods")
-    pod_files = subprocess.getoutput("kubectl exec pcos-pod -- ls -R /app/dataset")
-
-    return render_template(
-        "dashboard.html",
-        username=session.get("username"),
-        pod_status=pod_status,
-        pod_files=pod_files,
-        pod_output=output
+        dataset_files=dataset_files
     )
 
 
@@ -157,7 +146,7 @@ def logout():
 
 
 # ------------------------------
-# RUN APP
+# RUN APP (LOCAL ONLY)
 # ------------------------------
 if __name__ == "__main__":
     app.run(debug=True)

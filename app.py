@@ -38,16 +38,21 @@ def login_required(f):
 
 
 # ------------------------------
-# DATASET FILE LIST (OPTION 2)
+# DATASET TREE (TERMINAL STYLE)
 # ------------------------------
-def get_dataset_files():
+def get_dataset_tree():
     base_dir = os.getcwd()
     dataset_dir = os.path.join(base_dir, "dataset")
 
-    if os.path.exists(dataset_dir):
-        return sorted(os.listdir(dataset_dir))
-    else:
-        return ["Dataset folder not found"]
+    if not os.path.exists(dataset_dir):
+        return "dataset folder not found"
+
+    output = "/app/dataset:\n"
+
+    for item in sorted(os.listdir(dataset_dir)):
+        output += f"{item}\n"
+
+    return output
 
 
 # ------------------------------
@@ -121,18 +126,18 @@ def register():
 
 
 # ------------------------------
-# DASHBOARD (DATASET ONLY)
+# DASHBOARD (PRINT LIKE TERMINAL)
 # ------------------------------
 @app.route('/dashboard')
 @login_required
 def dashboard():
 
-    dataset_files = get_dataset_files()
+    pod_files = get_dataset_tree()
 
     return render_template(
         "dashboard.html",
         username=session.get("username"),
-        dataset_files=dataset_files
+        pod_files=pod_files
     )
 
 

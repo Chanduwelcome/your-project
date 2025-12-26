@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - ADVI Cloud</title>
+
     <style>
         * {
             margin: 0;
@@ -73,31 +74,14 @@
 
         .dashboard p {
             color: #b8c5d6;
-            margin-bottom: 1.5rem;
-            font-size: 1.2rem;
-        }
-
-        /* Train button style */
-        .train-btn {
-            padding: 12px 25px;
-            background-color: #5b8ef4;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            color: white;
-            cursor: pointer;
             margin-bottom: 2rem;
-        }
-
-        .train-btn:hover {
-            background-color: #4a7bdd;
+            font-size: 1.2rem;
         }
 
         .dashboard-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin-top: 1rem;
         }
 
         .card {
@@ -119,12 +103,15 @@
             font-size: 1.5rem;
         }
 
-        .ml-output {
-            white-space: pre-wrap;
-            color: #d1e0ff;
-            font-size: 0.9rem;
+        .dataset-list {
             max-height: 250px;
             overflow-y: auto;
+            color: #d1e0ff;
+            padding-left: 1rem;
+        }
+
+        .dataset-list li {
+            margin-bottom: 6px;
         }
 
         @media (max-width: 768px) {
@@ -142,82 +129,71 @@
 
 <body>
 
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/dashboard">Dashboard</a></li>
-        </ul>
-        <div class="user-info">
-            <span>Welcome, {{ username }}!</span>
-            <a href="/logout">Logout</a>
-        </div>
-    </nav>
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+    </ul>
 
-    <div class="dashboard">
-        <div class="dashboard-content">
+    <div class="user-info">
+        <span>Welcome, {{ username }}!</span>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
 
-            <h1>ADVI Cloud Dashboard</h1>
-            <p>Welcome to your cloud management portal</p>
+<div class="dashboard">
+    <div class="dashboard-content">
 
-            <!-- ⭐ TRAIN MODEL BUTTON -->
-            <form action="/train" method="post">
-                <button class="train-btn">Train Model</button>
-            </form>
+        <h1>ADVI Cloud Dashboard</h1>
+        <p>Welcome to your cloud management portal</p>
 
-            <div class="dashboard-cards">
+        <div class="dashboard-cards">
 
-                <!-- ⭐ POD STATUS CARD -->
-                <div class="card">
-                    <h3>Kubernetes Pod Status</h3>
-                    <pre class="ml-output">{{ pod_status }}</pre>
-                </div>
+            <!-- ✅ DATASET FILES (WORKS ON RENDER) -->
+            <div class="card">
+                <h3>Dataset Files</h3>
 
-                <!-- ⭐ POD DATASET FILE LIST -->
-                <div class="card">
-                    <h3>Pod Dataset Files</h3>
-                    <pre class="ml-output">{{ pod_files }}</pre>
-                </div>
-
-                <!-- ⭐ CLOUD ITEMS -->
-                <div class="card">
-                    <h3>Cloud Storage</h3>
-                    <p>Manage your files and documents in the cloud with enterprise-grade security.</p>
-                </div>
-
-                <div class="card">
-                    <h3>Analytics</h3>
-                    <p>View detailed analytics and insights about your cloud usage and performance.</p>
-                </div>
-
-                <div class="card">
-                    <h3>Settings</h3>
-                    <p>Configure your account settings, security preferences, and notifications.</p>
-                </div>
-
-                <div class="card">
-                    <h3>Support</h3>
-                    <p>Get help from our 24/7 support team and access documentation.</p>
-                </div>
-
-                <div class="card">
-                    <h3>Billing</h3>
-                    <p>Manage your subscription, view invoices, and update payment methods.</p>
-                </div>
-
-                <div class="card">
-                    <h3>API Access</h3>
-                    <p>Generate API keys and integrate ADVI Cloud with your applications.</p>
-                </div>
-
-                <!-- ⭐ ML TRAINING OUTPUT -->
-                <div class="card">
-                    <h3>ML Training Output</h3>
-                    <pre class="ml-output">{{ pod_output }}</pre>
-                </div>
-
+                <ul class="dataset-list">
+                    {% for file in dataset_files %}
+                        <li>{{ file }}</li>
+                    {% endfor %}
+                </ul>
             </div>
+
+            <!-- CLOUD SECTIONS -->
+            <div class="card">
+                <h3>Cloud Storage</h3>
+                <p>Manage your files and documents in the cloud with enterprise-grade security.</p>
+            </div>
+
+            <div class="card">
+                <h3>Analytics</h3>
+                <p>View detailed analytics and insights about your cloud usage and performance.</p>
+            </div>
+
+            <div class="card">
+                <h3>Settings</h3>
+                <p>Configure your account settings, security preferences, and notifications.</p>
+            </div>
+
+            <div class="card">
+                <h3>Support</h3>
+                <p>Get help from our 24/7 support team and access documentation.</p>
+            </div>
+
+            <div class="card">
+                <h3>Billing</h3>
+                <p>Manage your subscription, view invoices, and update payment methods.</p>
+            </div>
+
+            <div class="card">
+                <h3>API Access</h3>
+                <p>Generate API keys and integrate ADVI Cloud with your applications.</p>
+            </div>
+
         </div>
     </div>
+</div>
 
 </body>
 </html>

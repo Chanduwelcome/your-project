@@ -38,6 +38,16 @@ def login_required(f):
 
 
 # ------------------------------
+# FAKE KUBERNETES POD STATUS
+# ------------------------------
+def get_fake_pod_status():
+    return (
+        "NAME        READY   STATUS    RESTARTS   AGE\n"
+        "pcos-pod    1/1     Running   0          9h\n"
+    )
+
+
+# ------------------------------
 # DATASET TREE (TERMINAL STYLE)
 # ------------------------------
 def get_dataset_tree():
@@ -45,7 +55,7 @@ def get_dataset_tree():
     dataset_dir = os.path.join(base_dir, "dataset")
 
     if not os.path.exists(dataset_dir):
-        return "dataset folder not found"
+        return "/app/dataset:\n<empty>"
 
     output = "/app/dataset:\n"
 
@@ -126,17 +136,19 @@ def register():
 
 
 # ------------------------------
-# DASHBOARD (PRINT LIKE TERMINAL)
+# DASHBOARD (EXACT OUTPUT)
 # ------------------------------
 @app.route('/dashboard')
 @login_required
 def dashboard():
 
+    pod_status = get_fake_pod_status()
     pod_files = get_dataset_tree()
 
     return render_template(
         "dashboard.html",
         username=session.get("username"),
+        pod_status=pod_status,
         pod_files=pod_files
     )
 

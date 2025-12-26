@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ADVI Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        nav {
+            background: linear-gradient(135deg, #0a1628 0%, #1a2844 100%);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #5b8ef4;
+        }
+
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dashboard {
+            background: linear-gradient(135deg, #0a1628 0%, #1a2844 100%);
+            min-height: 100vh;
+            padding: 6rem 2rem 2rem;
+        }
+
+        .dashboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            color: white;
+        }
+
+        .dashboard h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard p {
+            color: #b8c5d6;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        /* Train button style */
+        .train-btn {
+            padding: 12px 25px;
+            background-color: #5b8ef4;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+
+        .train-btn:hover {
+            background-color: #4a7bdd;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: #5b8ef4;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .ml-output {
+            white-space: pre-wrap;
+            color: #d1e0ff;
+            font-size: 0.9rem;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard h1 {
+                font-size: 2rem;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/dashboard">Dashboard</a></li>
+        </ul>
+        <div class="user-info">
+            <span>Welcome, {{ username }}!</span>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard">
+        <div class="dashboard-content">
+
+            <h1>ADVI Cloud Dashboard</h1>
+            <p>Welcome to your cloud management portal</p>
+
+            <!-- ⭐ TRAIN MODEL BUTTON -->
+            <form action="/train" method="post">
+                <button class="train-btn">Train Model</button>
+            </form>
+
+            <div class="dashboard-cards">
+
+                <!-- ⭐ POD STATUS CARD -->
+                <div class="card">
+                    <h3>Kubernetes Pod Status</h3>
+                    <pre class="ml-output">{{ pod_status }}</pre>
+                </div>
+
+                <!-- ⭐ POD DATASET FILE LIST -->
+                <div class="card">
+                    <h3>Pod Dataset Files</h3>
+                    <pre class="ml-output">{{ pod_files }}</pre>
+                </div>
+
+                <!-- ⭐ CLOUD ITEMS -->
+                <div class="card">
+                    <h3>Cloud Storage</h3>
+                    <p>Manage your files and documents in the cloud with enterprise-grade security.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Analytics</h3>
+                    <p>View detailed analytics and insights about your cloud usage and performance.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Settings</h3>
+                    <p>Configure your account settings, security preferences, and notifications.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Support</h3>
+                    <p>Get help from our 24/7 support team and access documentation.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Billing</h3>
+                    <p>Manage your subscription, view invoices, and update payment methods.</p>
+                </div>
+
+                <div class="card">
+                    <h3>API Access</h3>
+                    <p>Generate API keys and integrate ADVI Cloud with your applications.</p>
+                </div>
+
+                <!-- ⭐ ML TRAINING OUTPUT -->
+                <div class="card">
+                    <h3>ML Training Output</h3>
+                    <pre class="ml-output">{{ pod_output }}</pre>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
